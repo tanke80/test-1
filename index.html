@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test de Seguretat Informàtica</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#64748b;--accent:#2563eb;--ok:#15803d;--bad:#dc2626;--border:#dbe3ef}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;line-height:1.5}
+header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;padding:42px 20px;text-align:center}header h1{margin:0 0 8px;font-size:clamp(1.8rem,4vw,2.8rem)}header p{margin:0;opacity:.9}
+main{max-width:920px;margin:28px auto;padding:0 16px}.question{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin:0 0 16px;box-shadow:0 4px 15px #1720330b}.question h2{font-size:1.05rem;margin:0 0 14px}.option{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid transparent;border-radius:10px;cursor:pointer}.option:hover{background:#f8fafc}.option input{margin-top:5px}.correct{background:#dcfce7!important;border-color:#86efac!important}.incorrect{background:#fee2e2!important;border-color:#fca5a5!important}.answer{display:none;margin-top:10px;font-size:.9rem;font-weight:600}.show .answer{display:block}.correctText{color:var(--ok)}.incorrectText{color:var(--bad)}
+.actions{position:sticky;bottom:14px;background:#ffffffed;backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 8px 30px #17203322}.btn{border:0;border-radius:10px;padding:12px 18px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}.btn:hover{filter:brightness(.95)}#result{font-size:1.1rem;font-weight:800}footer{text-align:center;color:var(--muted);padding:25px}
+</style></head>
+<body>
+<header><h1>Test de Seguretat Informàtica</h1><p>20 preguntes · Correcció automàtica · Nota sobre 10</p></header>
+<main><form id="quiz"></form><div class="actions"><span id="result">Respon totes les preguntes i prem «Corregir test».</span><button class="btn" type="button" id="grade">Corregir test</button></div></main>
+<footer>Test elaborat amb les preguntes i respostes proporcionades.</footer>
+<script>
+const questions=[
+["Per què cal protegir la informació en un sistema informàtic?",["Perquè ocupa molt espai al disc.","Perquè és un actiu valuós que pot patir pèrdues, robatori o modificació no autoritzada.","Perquè només serveix per a fer còpies de seguretat.","Perquè tots els sistemes són insegurs per definició."],1],
+["Quins són els tres pilars clàssics de la seguretat de la informació?",["Autenticació, autorització i auditoria.","Confidencialitat, integritat i disponibilitat.","Xifratge, còpies i antivirus.","Privacitat, contrasenya i firewall."],1],
+["La confidencialitat garanteix que:",["La informació sempre estiga disponible.","La informació no puga ser modificada.","Només les persones autoritzades puguen accedir a la informació.","Tots els usuaris tinguen accés a la informació."],2],
+["La integritat de la informació es refereix a:",["Que la informació siga exacta, completa i no haja estat alterada de manera no autoritzada.","Que la informació siga secreta.","Que la informació estiga sempre disponible.","Que qualsevol usuari puga modificar-la."],0],
+["La disponibilitat implica que:",["La informació només siga accessible per a l'administrador.","Els usuaris autoritzats puguen accedir a la informació i als recursos quan els calga.","Les dades estiguen sempre xifrades.","No es puguen fer còpies de les dades."],1],
+["El principi de no repudi significa que:",["L'usuari no pot negar haver realitzat una acció o enviat un missatge.","L'usuari no pot canviar la seua contrasenya.","Les dades no poden ser eliminades.","Tots els missatges són anònims."],0],
+["Quina diferència hi ha entre seguretat física i seguretat lògica?",["La física protegeix el maquinari i les instal·lacions; la lògica protegeix les dades i el programari.","La física protegeix només contrasenyes; la lògica només edificis.","No hi ha cap diferència.","La física és sempre digital i la lògica sempre analògica."],0],
+["La seguretat passiva es caracteritza per:",["Evitar totes les amenaces abans que passen.","Detectar i corregir els danys un cop produïda l'amenaça.","Eliminar els usuaris del sistema.","Xifrar sempre totes les dades."],1],
+["La seguretat activa es caracteritza per:",["Tenir com a objectiu evitar o prevenir les amenaces abans que es materialitzen.","Actuar només després d'un incident.","Fer còpies després d'una fallada.","Reparar exclusivament el maquinari."],0],
+["Quins són els tres factors d'autenticació clàssics?",["Nom, correu i telèfon.","Una cosa que saps, una cosa que tens i una cosa que tu eres.","Usuari, contrasenya i PIN.","Targeta, correu i certificat."],1],
+["Un exemple de factor d'autenticació biomètric seria:",["Una contrasenya.","Una targeta intel·ligent.","L'empremta dactilar o el reconeixement facial.","Un codi PIN."],2],
+["Què significa el model AAA en seguretat informàtica?",["Accés, Anàlisi i Antivirus.","Autenticació, Autorització i Auditoria (Accounting).","Autenticació, Antivirus i Accés.","Autorització, Auditoria i Anonimat."],1],
+["La comunicació «extrem a extrem» implica que:",["Les dades viatgen xifrades entre els dos extrems i només ells les poden desxifrar.","Les dades només es xifren al servidor.","Qualsevol intermediari pot desxifrar les dades.","Les dades viatgen sempre sense xifrar."],0],
+["Què és una vulnerabilitat?",["Un antivirus actualitzat.","Una debilitat o error en el sistema que pot ser explotat per una amenaça.","Una còpia de seguretat.","Un dispositiu de xarxa."],1],
+["Què és un exploit?",["Un programa per fer còpies de seguretat.","Una tècnica, codi o eina que aprofita una vulnerabilitat per comprometre el sistema.","Un tipus de firewall.","Un protocol de xifratge."],1],
+["Quin d'aquests és un tipus de malware?",["Firewall.","Router.","Troià (trojan).","HTTPS."],2],
+["Un atac de phishing consisteix principalment a:",["Accelerar una xarxa.","Enganyar l'usuari perquè revele informació confidencial fent-se passar per una entitat de confiança.","Xifrar una còpia de seguretat.","Instal·lar actualitzacions oficials."],1],
+["Quin és l'objectiu principal del RGPD?",["Augmentar la velocitat d'Internet.","Protegir les persones físiques pel que fa al tractament de les seves dades personals.","Eliminar totes les contrasenyes.","Regular únicament els videojocs."],1],
+["En el context de l'Administració electrònica, què cal garantir principalment?",["Que tots els tràmits siguen presencials.","La identitat dels ciutadans i la integritat i confidencialitat de les seues dades en els tràmits telemàtics.","Que no hi haja cap registre d'activitat.","Que qualsevol persona puga modificar les dades."],1],
+["Quina afirmació sobre els tipus d'atacs és correcta?",["Els atacs passius sempre destrueixen recursos.","Els atacs actius busquen modificar, interrompre o destruir recursos, mentre que els passius solen interceptar o escoltar informació sense alterar-la.","Els atacs actius només consisteixen a escoltar informació.","No existeix diferència entre atacs actius i passius."],1]
+];
+const letters=['a','b','c','d'];
+const quiz=document.getElementById('quiz');
+questions.forEach((q,i)=>{const box=document.createElement('section');box.className='question';box.innerHTML=`<h2>${i+1}. ${q[0]}</h2>`+q[1].map((o,j)=>`<label class="option" data-q="${i}" data-a="${j}"><input type="radio" name="q${i}" value="${j}"><span><b>${letters[j]})</b> ${o}</span></label>`).join('')+`<div class="answer"></div>`;quiz.appendChild(box)});
+document.getElementById('grade').onclick=()=>{let score=0,answered=0;document.querySelectorAll('.question').forEach((box,i)=>{box.classList.add('show');box.querySelectorAll('.option').forEach(x=>x.classList.remove('correct','incorrect'));const selected=box.querySelector(`input[name=q${i}]:checked`);const answer=box.querySelector('.answer');const correct=questions[i][2];if(selected){answered++;if(+selected.value===correct){score++;selected.closest('.option').classList.add('correct')}else{selected.closest('.option').classList.add('incorrect');box.querySelector(`[data-a="${correct}"]`).classList.add('correct')}}else{box.querySelector(`[data-a="${correct}"]`).classList.add('correct')}answer.innerHTML=selected&&+selected.value===correct?'<span class="correctText">✓ Correcta</span>':`<span class="incorrectText">✗ Incorrecta — resposta correcta: ${letters[correct]}) ${questions[i][1][correct]}</span>`});document.getElementById('result').textContent=`Nota: ${(score/2).toFixed(1).replace('.',',')} / 10 · ${score}/20 correctes · ${answered}/20 respostes`;
+window.scrollTo({top:0,behavior:'smooth'})};
+</script></body></html>
